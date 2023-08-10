@@ -11,7 +11,7 @@ library(learnr)
 
 ## Set-up
 
-In AE3, we estimated the proportion of students who's get an A or higher in the course using a few different methods. But what if we wanted to model the exam grades?
+In AE3, we estimated the proportion of students who get an A or higher in the course using a few different methods. But what if we wanted to model the exam grades?
 
 Let's consider the exam grades again from the dataset `gradebook`. The following code  has been run to load the data and the libraries we'll need:
 ```{r setup, include=TRUE, message=FALSE}
@@ -154,15 +154,34 @@ cat("The marginal posterior mode of mu is",
 
 In reading [E&R] Examples 7.2.1, 7.2.5 & 7.2.8, you may have noticed how complicated computing statistics from the posterior can be, if it's being done analytically. But we can approximate these statistics by sampling from the posterior distributions given in [E&R] Example 7.1.4. To do this, draw $N$ samples from the posterior for $\frac{1}{\sigma^2}$ and invert them, generating a random sample $\sigma_1^2,\sigma_2^2,..., \sigma_n^2$. Using each value of $\sigma_i^2$, draw a sample from the posterior for $\mu |\sigma^2$. The results is a random sample $(\mu_1, \sigma_1^2),(\mu_2,\sigma_2^2),..., (\mu_n,\sigma_n^2)$ from the joint posterior distribution. 
 
-Using the hyperparameters and data summaries from the previous code block, sample from the posterior distributions to get a random sample from the joint posterior distribtution. Plot the sampling densities of the posterior for $\mu$ and for $\sigma^2$ and compute a 95% credible interval for each.
+Using the hyperparameters and data summaries from the previous code block, sample from the posterior distributions to get a random sample from the joint posterior distribution. Plot the sampling densities of the posterior for $\mu$ and for $\sigma^2$ and compute a 95% credible interval for each.
 
-```{r est-sample, exercise=TRUE, exercise.setup="est-mu"}
+```{r est-sample, exercise=TRUE, exercise.setup="hp-setup"}
 set.seed(238)
 N <- 1000
 
+# set the values of hyperparameters (as before)
+alpha0 <- 
+beta0 <-  
+mu0 <-  
+tausq0 <-  
+
+# data summaries
+n <- 
+xbar <- 
+snsq <- 
+
+# set-up the distributions
+mux <- (n+1/tausq0)^{-1} *(mu0/tausq0 + n*xbar) # from Eq 7.1.7 [E&R]
+betax <- beta0 + (n-1)*snsq/2 + n*(xbar-mu0)^2 / (2*(1+n*tausq0)) # from Eq 7.1.8 [E&R]
+
+
+# Sample from the posterior distributions
 post_sigma2 <- 
+
 post_mu <- 
 
+# Combine samples into a tibble
 posterior_samp <- as_tibble(cbind(post_sigma2, post_mu)) 
 
 # Plots
@@ -170,9 +189,9 @@ posterior_samp <- as_tibble(cbind(post_sigma2, post_mu))
 
 
 # Credible intervals
-cat("A 95% credible interveral for mu is (", 
+cat("A 95% credible interval for mu is (", 
     ,
-    ") and a 95% credible interveral for sigma^2 is (",
+    ") and a 95% credible interval for sigma^2 is (",
     ,
     ")")
 
